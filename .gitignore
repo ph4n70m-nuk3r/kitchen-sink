@@ -1,0 +1,77 @@
+##################
+## Build output ##
+##################
+bin/
+out/
+target/
+go.work
+go.work.sum
+*.a
+*.dll
+*.dylib
+*.exe
+*.exe~
+*.lib
+*.lst
+*.o
+*.obj
+*.out
+*.so
+*.test
+#############
+## Editors ##
+#############
+## JetBrains IntelliJ IDEA ##
+.idea/
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+*.iml
+*.ipr
+*.iws
+## Microsoft Visual Studio Code ##
+.history/
+.vscode/
+*.vsix
+## Notepad++ ##
+*.bak
+## VIM ##
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+tags
+[._]*.un~
+## Xcode ##
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+###########
+## Linux ##
+###########
+.directory
+.fuse_hidden*
+.nfs*
+.Trash-*
+*~
+#############
+## Windows ##
+#############
+$RECYCLE.BIN/
+[Dd]esktop.ini
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+*.cab
+*.lnk
+*.msi
+*.msix
+*.msm
+*.msp
+*.stackdump
