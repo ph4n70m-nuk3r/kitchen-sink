@@ -75,3 +75,7 @@ Thumbs.db:encryptable
 *.msm
 *.msp
 *.stackdump
+#############
+## SECRETS ##
+#############
+docker/resources/runtime/secret/*

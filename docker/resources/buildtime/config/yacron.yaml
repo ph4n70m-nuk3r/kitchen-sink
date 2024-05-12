@@ -1,0 +1,100 @@
+## Web interface for YaCron. ##
+web:
+  listen:
+    - http://127.0.0.1:8081
+    - unix:///tmp/yacron.sock
+## Default Preferences. ##
+defaults:
+  captureStdout: true
+  captureStderr: true
+  streamPrefix: "[{job_name} job]"
+  failsWhen:
+    producesStdout: false
+    producesStderr: false
+    nonzeroReturn: true
+    always: false
+  utc: false
+  environment:
+    - key: PATH
+      value: /bin:/usr/bin
+## Log Output. ##
+logging:
+  # https://docs.python.org/3/library/logging.config.html
+  version: 1
+  disable_existing_loggers: false
+  formatters:
+    simple:
+      format: '%(asctime)s [%(processName)s/%(threadName)s] %(levelname)s (%(name)s): %(message)s'
+      datefmt: '%Y-%m-%d %H:%M:%S'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: DEBUG
+      formatter: simple
+      stream: ext://sys.stdout
+  root:
+    level: INFO # switch to WARN or CRITICAL to reduce YaCron output.
+    handlers:
+      - console
+## Scheduled Jobs. ##
+jobs:
+  ## Example of a job which runs once on startup. ##
+  - name: example-startup-01
+    shell: /bin/bash
+    command: echo '<html lang="en"><h1>test</h1></html>' >/var/www/kitchen-sink/public/doc/index.html
+    captureStdout: false # Not interested in seeing any info output from this job.
+    captureStderr: false # Not interested in seeing any error output from this job.
+    schedule: "@reboot"
+  ## Example of a job which runs successfully every 1 minute. ##
+  - name: example-success-01
+    schedule: "*/1 * * * *"
+    shell: /bin/bash
+    command: echo "success!"
+  ## Example of a job scheduled to run every 2 minutes, but will fail. ##
+  ## On failure, an email is sent, and the retry policy will be applied. ##
+  - name: example-fail-01
+    schedule: "*/2 * * * *"
+    shell: /bin/bash
+    command: |
+      echo "this message was printed to stdout"
+      echo "this message was printed to stderr" 1>&2
+      exit 1
+    onFailure:
+      report:
+        mail:
+          from: ph4n70m.nuk3r@gmail.com
+          to: ph4n70m.nuk3r@gmail.com
+          smtpHost: smtp.gmail.com
+          smtpPort: 587
+          tls: false
+          starttls: true
+          # optional fields:
+          username: ph4n70m.nuk3r@gmail.com
+          password:
+            fromEnvVar: SMTP_PASSWORD
+          html: false
+          subject: Cron job '{{name}}' {% if success %}completed{% else %}failed{% endif %}
+          body: |
+            {% if fail_reason -%}
+            (job failed because {{fail_reason}})
+            {% endif %}
+            {% if stdout and stderr -%}
+            STDOUT:
+            {{stdout}}
+            ---
+            STDERR:
+            {{stderr}}
+            {% elif stdout -%}
+            STDOUT:
+            {{stdout}}
+            {% elif stderr -%}
+            STDERR:
+            {{stderr}}
+            {% else -%}
+            (no output was captured)
+            {% endif %}
+      retry:
+        maximumRetries: 10
+        initialDelay: 15
+        maximumDelay: 120
+        backoffMultiplier: 2

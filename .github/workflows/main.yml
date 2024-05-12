@@ -1,0 +1,29 @@
+name: Docker Image CI
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Setup Docker BuildX
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Build, tag, and push image to DockerHub
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          -t phantomnuker/kitchen-sink:latest \
+          -t phantomnuker/kitchen-sink:$IMAGE_TAG \
+          --push \
+          ./docker/
