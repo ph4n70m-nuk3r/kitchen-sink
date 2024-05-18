@@ -54,7 +54,7 @@ RUN groupadd "${NON_ROOT_GROUP}" \
     && useradd --gid "${NON_ROOT_GROUP}" --no-create-home --shell "${SHELL_}" "${NON_ROOT_USER}"
 ## Create dirs and set permissions. ##
 RUN mkdir -p "${NGINX_CACHE_DIR}" "${NGINX_CONFIG_DIR}" "${NGINX_WEB_DOC_DIR}" "${NGINX_WEB_HTML_DIR}" "${NGINX_TEMP_DIR}" "${NGINX_LOG_DIR}" \
-    && chown -R ${NON_ROOT_USER}:0 "${NGINX_CACHE_DIR}" "${NGINX_CONFIG_DIR}" "${NGINX_WEB_DOC_DIR}" "${NGINX_WEB_HTML_DIR}" "${NGINX_TEMP_DIR}" "${NGINX_LOG_DIR}" \
+    && chown -R "${NON_ROOT_USER}:0" "${NGINX_CACHE_DIR}" "${NGINX_CONFIG_DIR}" "${NGINX_WEB_DOC_DIR}" "${NGINX_WEB_HTML_DIR}" "${NGINX_TEMP_DIR}" "${NGINX_LOG_DIR}" \
     && chmod -R g+w "${NGINX_CACHE_DIR}" "${NGINX_CONFIG_DIR}" "${NGINX_WEB_DOC_DIR}" "${NGINX_WEB_HTML_DIR}" "${NGINX_TEMP_DIR}" "${NGINX_LOG_DIR}"
 ## Copy Nginx config into image. ##
 COPY --chown="${NON_ROOT_USER}:0" "./resources/buildtime/config/nginx.conf" "${NGINX_CONFIG_PATH}"
