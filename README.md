@@ -42,4 +42,3 @@ http://localhost:8080/public/doc/example.txt
 http://localhost:8080/public/doc/
 ### error page (/static/html/404.html)
 curl http://localhost:8080/blah
-```
